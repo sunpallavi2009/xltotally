@@ -27,7 +27,7 @@
         </div>
     </form>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             const phoneInput = document.getElementById('phone');
             const userInput = document.getElementById('user');
@@ -43,5 +43,33 @@
                 document.getElementById('submitBtn').innerHTML = 'Sending...';
             });
         });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const phoneInput = document.getElementById('phone');
+            const userInput = document.getElementById('user');
+            const users = @json($users);
+    
+            phoneInput.addEventListener('input', function () {
+                const typedPhone = phoneInput.value;
+                const matchedUser = users.find(user => user.phone.startsWith(typedPhone));
+                if (matchedUser) {
+                    userInput.value = matchedUser.name;
+                    userInput.closest('.mt-4').style.display = 'block'; // Show the user container
+                } else {
+                    userInput.value = '';
+                    userInput.closest('.mt-4').style.display = 'none'; // Hide the user container
+                }
+            });
+    
+            // Hide the user container initially
+            userInput.closest('.mt-4').style.display = 'none';
+    
+            document.getElementById('otpForm').addEventListener('submit', function() {
+                document.getElementById('submitBtn').innerHTML = 'Sending...';
+            });
+        });
     </script>
+    
 </x-guest-layout>

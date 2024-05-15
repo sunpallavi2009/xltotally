@@ -32,7 +32,9 @@ class OtpRequestController extends Controller
 
         $response = $this->sendOtpViaSms($user->phone, $otp);
 
-        return response()->json(['message' => 'OTP sent successfully', 'response' => $response]);
+        // return response()->json(['message' => 'OTP sent successfully', 'response' => $response]);
+
+        return redirect()->route('otp.verify', ['userId' => $user->id])->with('success', 'OTP sent successfully.');
 
         // return redirect()->route('roles.index')->with('success', 'OTP sent successfully.');
     }
@@ -94,32 +96,29 @@ class OtpRequestController extends Controller
         return $response;
     }
 
-    // public function sendOtp(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'phone' => 'required|exists:users,phone',
-    //     ]);
+    public function showVerificationForm($userId)
+    {
+        return view('otprequest.verify', compact('userId'));
+    }
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['error' => $validator->errors()], 400);
-    //     }
+    public function verifyOtp(Request $request, $userId)
+    {
+        $request->validate([
+            'otp' => 'required|numeric',
+        ]);
 
-    //     $user = User::where('phone', $request->phone)->first();
-    //     $otp = rand(100000, 999999);
+        $otpVerification = OtpVerification::where('user_id', $userId)
+            ->where('otp', $request->otp)
+            ->first();
 
-    //     //dd($otp);
-        
-    //     // Save OTP to the database using the OtpVerification model
-    //     $otpVerification = new OtpVerification([
-    //         'user_id' => $user->id,
-    //         'otp' => $otp,
-    //     ]);
-    //     $otpVerification->save();
-
-    //     // Send OTP via SMS
-    //     $response = $this->sendOtpViaSms($user->phone, $otp);
-
-    //     return response()->json(['message' => 'OTP sent successfully', 'response' => $response]);
-    // }
+        if ($otpVerification) {
+            // OTP is valid
+            // Perform further actions like logging in the user, etc.
+            return redirect()->route('dashboard')->with('success', 'OTP verified successfully.');
+        } else {
+            // Invalid OTP
+            return back()->with('error', 'Invalid OTP. Please try again.');
+        }
+    }
 
 }
