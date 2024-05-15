@@ -38,9 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/send-otp', [OtpRequestController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/otp/verify/{userId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
     Route::post('/otp/verify/{userId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
-
-
-
 });
 
 require __DIR__.'/auth.php';
