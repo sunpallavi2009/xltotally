@@ -2,39 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Society;
 use Illuminate\Http\Request;
 use App\Models\OtpVerification;
+use Illuminate\Support\Facades\Auth;
 
 class OtpRequestController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('otprequest.index', compact('users'));
+        $society = Society::all();
+        return view('otprequest.index', compact('society'));
     }
 
     public function sendOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|exists:users,phone',
+            'phone' => 'required|exists:societies,phone',
         ]);
 
-        $user = User::where('phone', $request->phone)->first();
+        $society = Society::where('phone', $request->phone)->first();
         $otp = rand(100000, 999999);
 
         $otpVerification = new OtpVerification([
-            'user_id' => $user->id,
+            'society_id' => $society->id,
             'otp' => $otp,
         ]);
 
         $otpVerification->save();
 
-        $response = $this->sendOtpViaSms($user->phone, $otp);
+        $response = $this->sendOtpViaSms($society->phone, $otp);
+
+        Auth::guard('society')->login($society);
 
         // return response()->json(['message' => 'OTP sent successfully', 'response' => $response]);
 
-        return redirect()->route('otp.verify', ['userId' => $user->id])->with('success', 'OTP sent successfully.');
+        return redirect()->route('otp.verify', ['societyId' => $society->id])->with('success', 'OTP sent successfully.');
 
         // return redirect()->route('roles.index')->with('success', 'OTP sent successfully.');
     }
@@ -96,25 +99,25 @@ class OtpRequestController extends Controller
         return $response;
     }
 
-    public function showVerificationForm($userId)
+    public function showVerificationForm($societyId)
     {
-        return view('otprequest.verify', compact('userId'));
+        return view('otprequest.verify', compact('societyId'));
     }
 
-    public function verifyOtp(Request $request, $userId)
+    public function verifyOtp(Request $request, $societyId)
     {
         $request->validate([
             'otp' => 'required|numeric',
         ]);
 
-        $otpVerification = OtpVerification::where('user_id', $userId)
+        $otpVerification = OtpVerification::where('society_id', $societyId)
             ->where('otp', $request->otp)
             ->first();
 
         if ($otpVerification) {
             // OTP is valid
             // Perform further actions like logging in the user, etc.
-            return redirect()->route('dashboard')->with('success', 'OTP verified successfully.');
+            return redirect()->route('society.dashboard')->with('success', 'OTP verified successfully.');
         } else {
             // Invalid OTP
             return back()->with('error', 'Invalid OTP. Please try again.');

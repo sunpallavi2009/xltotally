@@ -4,11 +4,11 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
     {{-- <x-auth-validation-errors class="mb-4" :errors="$errors" /> --}}
 
-    <form method="POST" action="{{ route('otp.verify.submit', ['userId' => $userId]) }}">
+    <form method="POST" action="{{ route('otp.verify.submit', ['societyId' => $societyId]) }}">
         @csrf
 
         <div class="mt-4">
-            <x-input-label for="otp" :value="__('OTP')" />
+            <x-input-label for="otp" :value="__('Verify OTP')" />
             <x-text-input id="otp"
                 class="block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 type="text" name="otp" required autocomplete="phone" />

@@ -10,15 +10,15 @@ class OtpVerification extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'society_id',
         'otp',
     ];
 
     /**
      * Get the user that owns the OTP verification.
      */
-    public function user()
+    public function society()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Society::class);
     }
 }

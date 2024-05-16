@@ -38,7 +38,7 @@
       background-color: #2196F3;
     }
     
-    #projects {
+    #society {
       top: 140px;
       background-color: #f44336;
     }
@@ -50,7 +50,7 @@
     </style>
 <div id="mySidenav" class="sidenav">
     <a href="{{ route('roles.index') }}" id="role">Role</a>
-    <a href="{{ route('otp') }}" id="otp">Otp</a>
-    {{-- <a href="#" id="projects">Projects</a>
-    <a href="#" id="contact">Contact</a> --}}
+    <a href="{{ route('otpRequest') }}" id="otp">Otp</a>
+    <a href="{{ route('society.index') }}" id="society">Society</a>
+    <a href="#" id="contact">Contact</a>
   </div>

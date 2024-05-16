@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\OtpRequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OtpRequestController;
+use App\Http\Controllers\Society\DashboardController;
+use App\Http\Controllers\SuperAdmin\SocietyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,14 +32,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('roles/get-data', [RoleController::class, 'getData'])->name('roles.get-data');
-    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
-    Route::post('roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/get-data', [RoleController::class, 'getData'])->name('roles.get-data');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
 
-    Route::get('/otp', [OtpRequestController::class, 'index'])->name('otp');
-    Route::post('/send-otp', [OtpRequestController::class, 'sendOtp'])->name('sendOtp');
-    Route::get('/otp/verify/{userId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
-    Route::post('/otp/verify/{userId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
+    Route::get('/society', [SocietyController::class, 'index'])->name('society.index');
+    Route::get('/society/get-data', [SocietyController::class, 'getData'])->name('society.get-data');
+    Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
+    Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
+
 });
+
+
+
+    Route::get('/otp-login', [OtpRequestController::class, 'index'])->name('otpRequest');
+    Route::post('/send-otp', [OtpRequestController::class, 'sendOtp'])->name('sendOtp');
+    Route::get('/otp-login/verify/{societyId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
+    Route::post('/otp-login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
+
+    Route::get('/society/dashboard', [DashboardController::class, 'index'])->name('society.dashboard');
+    Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');
+
 
 require __DIR__.'/auth.php';

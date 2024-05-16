@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('otp_verifications', function (Blueprint $table) {
+        Schema::create('societies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('society_id')->nullable(); // Changed to unsignedBigInteger
-            $table->foreign('society_id')->references('id')->on('societies')->onDelete('cascade'); // Added foreign key constraint
-            $table->string('otp')->nullable();
+            $table->string('name')->nullable();
+            $table->text('address')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('pincode')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('otp_verifications');
+        Schema::dropIfExists('societies');
     }
 };
