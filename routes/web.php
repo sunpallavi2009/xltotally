@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OtpRequestController;
+use App\Http\Controllers\Society\MemberController;
 use App\Http\Controllers\Society\DashboardController;
 use App\Http\Controllers\SuperAdmin\SocietyController;
 
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/society/dashboard', [DashboardController::class, 'index'])->name('society.dashboard');
     Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');
+
+    Route::get('/society/member', [MemberController::class, 'index'])->name('member.index');
 
 
 require __DIR__.'/auth.php';
