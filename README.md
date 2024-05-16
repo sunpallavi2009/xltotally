@@ -5,26 +5,29 @@
   <span style="margin: 0 10px;">Laravel Framework 10.10</span>
   <span style="margin: 0 10px;">Laravel breeze 1.29</span>
   <span style="margin: 0 10px;">Datatable yajra/laravel-datatables-oracle 10.11</span>
+  <span style="margin: 0 10px;">phpoffice phpspreadsheet 2.1</span>
 </p>
 
-## About Laravel
+## About Laravel Project
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- composer require phpoffice/phpspreadsheet
+- composer require yajra/laravel-datatables-oracle
+- npm install
+- npm run dev
+- laravel new xltotallytest 
+- php artisan make:model -m Role
+- php artisan make:controller RoleController
+- php artisan serve
+- php artisan migrate:rollback
+- php artisan migrate
+- git init
+- git add .
+- git commit -m "first commit"
+- git branch -M main
+- git remote add origin https://github.com/sunpallavi2009/xltotally.git
+- git pull origin main
+- git push -u origin main
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
