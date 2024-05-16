@@ -17,11 +17,7 @@ class MemberController extends Controller
         return view ('society.member.index', compact('society'));
     }
 
-    public function index()
-{
-    $society = Auth::guard('society')->user();
-    return view('society.member.index', compact('society'));
-}
+
 
 // public function getData(Request $request)
 // {
