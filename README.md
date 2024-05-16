@@ -1,11 +1,11 @@
 <p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank" style="font-size: 24px; font-weight: bold; color: #2c3e50; text-decoration: none;">Xltotally Society</a></p>
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: row; gap: 10px;">
-    <p>PHP 8.1</p>
-    <p>Laravel Framework 10.10</p>
-    <p>Laravel breeze 1.29</p>
-    <p>Datatable yajra/laravel-datatables-oracle 10.11</p>
-</div>
+<p style="text-align: center;">
+  <span style="margin: 0 10px;">PHP 8.1</span>
+  <span style="margin: 0 10px;">Laravel Framework 10.10</span>
+  <span style="margin: 0 10px;">Laravel breeze 1.29</span>
+  <span style="margin: 0 10px;">Datatable yajra/laravel-datatables-oracle 10.11</span>
+</p>
 
 ## About Laravel
 
