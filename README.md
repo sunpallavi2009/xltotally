@@ -1,6 +1,6 @@
 <p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank">Xltotally Society</a></p>
 
-<p align="center">
+<p align="center" class="col-lg-12">
 <p>PHP 8.1</p>
 <a href="#">Laravel Framework 10.10</a>
 <a href="#">Laravel breeze 1.29</a>
