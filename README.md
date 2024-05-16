@@ -1,6 +1,6 @@
-<p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank">Xltotally Society</a></p>
+<p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank" style="font-size: 24px; font-weight: bold; color: #2c3e50; text-decoration: none;">Xltotally Society</a></p>
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: row; gap: 10px;">
     <p>PHP 8.1</p>
     <p>Laravel Framework 10.10</p>
     <p>Laravel breeze 1.29</p>
