@@ -1,10 +1,10 @@
-<p align="center"><a href="https://laravel.com" target="_blank">Xltotally Society</a></p>
+<p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank">Xltotally Society</a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="#">PHP 8.1</a>
+<a href="#">Laravel Framework 10.10</a>
+<a href="#">Laravel breeze 1.29</a>
+<a href="#">Datatable yajra/laravel-datatables-oracle 10.11</a>
 </p>
 
 ## About Laravel
