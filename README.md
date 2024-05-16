@@ -1,13 +1,11 @@
 <p align="center"><a href="https://github.com/sunpallavi2009/xltotally" target="_blank">Xltotally Society</a></p>
 
-<p align="center" class="col-lg-12">
-    <p class="row">
-<p>PHP 8.1</p>
-<a href="#">Laravel Framework 10.10</a>
-<a href="#">Laravel breeze 1.29</a>
-<a href="#">Datatable yajra/laravel-datatables-oracle 10.11</a>
-</p>
-</p>
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <p>PHP 8.1</p>
+    <p>Laravel Framework 10.10</p>
+    <p>Laravel breeze 1.29</p>
+    <p>Datatable yajra/laravel-datatables-oracle 10.11</p>
+</div>
 
 ## About Laravel
 
@@ -30,4 +28,3 @@ Laravel has the most extensive and thorough [documentation](https://laravel.com/
 You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
 If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
