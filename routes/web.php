@@ -36,11 +36,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/roles/get-data', [RoleController::class, 'getData'])->name('roles.get-data');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{role}/update', [RoleController::class, 'update'])->name('roles.update');
+
 
     Route::get('/society', [SocietyController::class, 'index'])->name('society.index');
     Route::get('/society/get-data', [SocietyController::class, 'getData'])->name('society.get-data');
     Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
     Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
+    Route::delete('/society/{society}', [SocietyController::class, 'destroy'])->name('society.destroy');
+    Route::get('/society/{society}/edit', [SocietyController::class, 'edit'])->name('society.edit');
+    Route::put('/society/{society}/update', [SocietyController::class, 'update'])->name('society.update');
+
 
 });
 
@@ -55,6 +63,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');
 
     Route::get('/society/member', [MemberController::class, 'index'])->name('member.index');
+    Route::get('/society/member/get-data', [MemberController::class, 'getData'])->name('member.get-data');
+    Route::get('/society/member/create', [MemberController::class, 'create'])->name('member.create');
+    Route::post('/society/member/import', [MemberController::class, 'memberImport'])->name('member.import');
+    Route::delete('/society/member/{member}', [MemberController::class, 'destroy'])->name('member.destroy');
+    Route::put('/member/{id}/status', [MemberController::class, 'updateStatus'])->name('member.update-status');
+
 
 
 require __DIR__.'/auth.php';

@@ -11,4 +11,9 @@ class Member extends Model
 
     protected $guarded = [];
 
+    public function society()
+    {
+        return $this->belongsTo(Society::class);
+    }
+
 }

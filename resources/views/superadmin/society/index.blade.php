@@ -34,7 +34,7 @@
                                 <th>Pincode</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
-                                {{-- <th>Action</th> --}}
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -76,23 +76,36 @@
                         {data: 'pincode'},
                         {data: 'created_at'},
                         {data: 'updated_at'},
-
-                        // {data: 'actions', "render": function ( data, type, row ) {
-
-                        //     var output = '<div>';
-
-                        //      output +=  '<a href="/roles/'+row.id+'+/destroy" class="pr-2">Delete</a>';
-
-                        //      output += '<a href="#" @click.prevent="editRole('+row.id+')">Edit</a>';
-
-                        //      output += '<div>';
-
-                        //         return output;
-
-
-                        // }}
+                        {data: 'actions', name: 'actions', orderable: false, searchable: false}
 
                     ]
+                });
+
+                // Handle the delete action
+                $('#society-datatable').on('click', '.delete-society', function() {
+                    var url = $(this).data('url');
+                    if (confirm('Are you sure you want to delete this society?')) {
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    table.ajax.reload();
+                                    alert('Society deleted successfully.');
+                                } else {
+                                    alert('Error deleting role.');
+                                }
+                            }
+                        });
+                    }
+                });
+
+                $('#society-datatable').on('click', '.edit-society', function() {
+                    var url = $(this).data('url');
+                    window.location.href = url;
                 });
 
 

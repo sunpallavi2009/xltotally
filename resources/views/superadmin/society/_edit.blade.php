@@ -5,7 +5,7 @@
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between">
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        {{ __('Add Society') }}
+                        {{ __('Edit Society') }}
                     </h2>
 
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
@@ -32,38 +32,39 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('society.store') }}" class="space-y-6">
+                        <form method="POST" action="{{ route('society.update', $society->id) }}">
+                            @method('PUT')
                             @csrf
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
                                 <div class="p-4">
                                     <x-input-label for="name" :value="__('Socity Name')" />
-                                    <x-text-input id="name" class="form-control mt-1" type="text" name="name" required autofocus autocomplete="name" />
+                                    <x-text-input id="name" class="form-control mt-1" type="text" name="name" value="{{ old('name', $society->name) }}" required autofocus autocomplete="name" />
                                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
                                 <div class="p-4">
                                     <x-input-label for="state" :value="__('State')" />
-                                    <x-text-input id="state" class="form-control mt-1" type="text" name="state" required autofocus autocomplete="state" />
+                                    <x-text-input id="state" class="form-control mt-1" type="text" name="state" value="{{ old('name', $society->state) }}" required autofocus autocomplete="state" />
                                     <x-input-error :messages="$errors->get('state')" class="mt-2" />
                                 </div>
                                 <div class="p-4">
                                     <x-input-label for="city" :value="__('City')" />
-                                    <x-text-input id="city" class="form-control mt-1" type="text" name="city" required autofocus autocomplete="city" />
+                                    <x-text-input id="city" class="form-control mt-1" type="text" name="city" value="{{ old('name', $society->city) }}" required autofocus autocomplete="city" />
                                     <x-input-error :messages="$errors->get('city')" class="mt-2" />
                                 </div>
                                 <div class="p-4">
                                     <x-input-label for="pincode" :value="__('Pincode')" />
-                                    <x-text-input id="pincode" class="form-control mt-1" type="number" name="pincode" required autofocus autocomplete="pincode" />
+                                    <x-text-input id="pincode" class="form-control mt-1" type="number" name="pincode" value="{{ old('name', $society->pincode) }}" required autofocus autocomplete="pincode" />
                                     <x-input-error :messages="$errors->get('pincode')" class="mt-2" />
                                 </div>
                                 <div class="p-4">
                                     <x-input-label for="phone" :value="__('Phone')" />
-                                    <x-text-input id="phone" class="form-control mt-1" type="number" name="phone" required autofocus autocomplete="phone" />
+                                    <x-text-input id="phone" class="form-control mt-1" type="number" name="phone" value="{{ old('name', $society->phone) }}" required autofocus autocomplete="phone" />
                                     <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                                 </div>
                             </div>
                             <div class="col-lg-8">
                                 <x-input-label for="address" :value="__('Address')" />
-                                <textarea id="address" name="address" class="form-control mt-1 block w-full" rows="4" required></textarea>
+                                <textarea id="address" name="address" class="form-control mt-1 block w-full" rows="4" required>{{ old('name', $society->address) }}</textarea>
                                 <x-input-error :messages="$errors->get('address')" class="mt-2" />
                             </div>
 

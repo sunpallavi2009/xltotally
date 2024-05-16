@@ -15,8 +15,6 @@
             </div>
         </header>
 
-
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -27,13 +25,10 @@
                             <tr>
                                 <th>SR. NO.</th>
                                 <th>Name</th>
-                                {{-- <th>Action</th> --}}
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-
-
-
                             </tbody>
                         </table>
 
@@ -42,13 +37,9 @@
             </div>
         </div>
 
-
         @push('scripts')
 
         <script>
-
-            var table;
-
             $(document).ready(function() {
                 table = $('#roles-datatable').DataTable({
                     processing: true,
@@ -56,44 +47,51 @@
                     ajax: {
                         url: "{{ route('roles.get-data') }}",
                         data: function(d) {
-
+                            // Additional data if needed
                         }
                     },
                     columns: [
                         {data: 'id'},
                         {data: 'name'},
-
-                        // {data: 'actions', "render": function ( data, type, row ) {
-
-                        //     var output = '<div>';
-
-                        //      output +=  '<a href="/roles/'+row.id+'+/destroy" class="pr-2">Delete</a>';
-
-                        //      output += '<a href="#" @click.prevent="editRole('+row.id+')">Edit</a>';
-
-                        //      output += '<div>';
-
-                        //         return output;
-
-
-                        // }}
-
+                        {data: 'actions', name: 'actions', orderable: false, searchable: false}
                     ]
                 });
 
+                // Handle the delete action
+                $('#roles-datatable').on('click', '.delete-role', function() {
+                    var url = $(this).data('url');
+                    if (confirm('Are you sure you want to delete this role?')) {
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    table.ajax.reload();
+                                    alert('Role deleted successfully.');
+                                } else {
+                                    alert('Error deleting role.');
+                                }
+                            }
+                        });
+                    }
+                });
+
+                $('#roles-datatable').on('click', '.edit-role', function() {
+                    var url = $(this).data('url');
+                    window.location.href = url;
+                });
 
                 $('#clear-filters').click(function () {
                     $("#name").val('').trigger('change');
                     table.search('').draw();
                 });
-
-
             });
         </script>
-
 
         @endpush
 
     </div>
-
 </x-app-layout>

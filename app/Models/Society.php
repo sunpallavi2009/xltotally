@@ -17,6 +17,11 @@ class Society extends Model implements Authenticatable
     {
         return $this->hasMany(OtpVerification::class);
     }
+    
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
 
      // Implementing the required methods of the Authenticatable interface
      public function getAuthIdentifierName()
