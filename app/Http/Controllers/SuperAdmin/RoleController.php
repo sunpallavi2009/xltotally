@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        return view ('roles.index');
+        return view ('superadmin.roles.index');
     }
 
     public function getData(Request $request)
@@ -33,7 +34,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view ('roles._create');
+        return view ('superadmin.roles._create');
     }
 
     public function store(Request $request)
@@ -50,7 +51,7 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::findOrFail($id);
-        return view('roles._edit', compact('role'));
+        return view('superadmin.roles._edit', compact('role'));
     }
 
     public function update(Request $request, $id)

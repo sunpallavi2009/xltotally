@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\OtpRequestController;
+use App\Http\Controllers\Auth\OtpRequestController;
 use App\Http\Controllers\Society\MemberController;
 use App\Http\Controllers\Society\DashboardController;
 use App\Http\Controllers\SuperAdmin\SocietyController;
@@ -54,10 +54,10 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/otp-login', [OtpRequestController::class, 'index'])->name('otpRequest');
+    Route::get('/society/login', [OtpRequestController::class, 'index'])->name('otpRequest');
     Route::post('/send-otp', [OtpRequestController::class, 'sendOtp'])->name('sendOtp');
-    Route::get('/otp-login/verify/{societyId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
-    Route::post('/otp-login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
+    Route::get('/society/login/verify/{societyId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
+    Route::post('/society/login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
 
     Route::get('/society/dashboard', [DashboardController::class, 'index'])->name('society.dashboard');
     Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');

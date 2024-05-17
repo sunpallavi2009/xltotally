@@ -17,36 +17,17 @@ class MemberController extends Controller
         return view ('society.member.index', compact('society'));
     }
 
-
-
-// public function getData(Request $request)
-// {
-//     if ($request->ajax()) {
-//         // Get the currently logged-in society ID
-//         $societyId = Auth::guard('society')->id();
-
-//         // Fetch members belonging to the logged-in society
-//         $members = Member::with('society')
-//             ->where('society_id', $societyId)
-//             ->latest()
-//             ->get();
-
-//         return DataTables::of($members)
-//             ->addIndexColumn()
-//             ->addColumn('actions', function($row){
-//                 $deleteUrl = route('member.destroy', $row->id);
-//                 return '<a href="javascript:void(0)" class="delete-member" data-url="' . $deleteUrl . '">Delete</a>';
-//             })
-//             ->rawColumns(['actions'])
-//             ->make(true);
-//     }
-// }
-
-
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $members = Member::with('society')->latest()->get();
+            // Get the currently logged-in society ID
+            $societyId = Auth::guard('society')->id();
+
+            // Fetch members belonging to the logged-in society
+            $members = Member::with('society')
+                ->where('society_id', $societyId)
+                ->latest()
+                ->get();
 
             return DataTables::of($members)
                 ->addIndexColumn()
@@ -58,6 +39,7 @@ class MemberController extends Controller
                 ->make(true);
         }
     }
+
 
     // public function getData(Request $request)
     // {

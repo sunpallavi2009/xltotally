@@ -1,21 +1,81 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ __('Dashboard') }}
-                </h2>
+@php
+    $userCount = App\Models\User::count();
+    $roleCount = App\Models\Role::count();
+@endphp
+@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
+@section('content')
+    @include('layouts.partials.topnav', ['title' => 'Dashboard'])
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">User</p>
+                                    <h5 class="font-weight-bolder">
+                                        {{ $userCount }}
+                                    </h5>
+                                    <p class="mb-0">
+                                        {{-- <span class="text-success text-sm font-weight-bolder">+55%</span>
+                                        since yesterday --}}
+                                    </p>
+                                </div> 
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                    <i class="fa fa-user text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Role</p>
+                                    <h5 class="font-weight-bolder">
+                                        {{ $roleCount }}
+                                    </h5>
+                                    <p class="mb-0">
+                                        {{-- <span class="text-success text-sm font-weight-bolder">+3%</span>
+                                        since last week --}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                    <i class="fa fa-list text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="col-lg-12 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">
+                    <div class="card-header pb-0 pt-3 bg-transparent">
+                        <h6 class="text-capitalize">overview</h6>
+                        <p class="text-sm mb-0">
+                            <i class="fa fa-arrow-up text-success"></i>
+                            {{-- <span class="font-weight-bold">4% more</span> in 2021 --}}
+                        </p>
+                    </div>
+                    <div class="card-body p-3">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        @include('layouts.partials.footer')
     </div>
-</x-app-layout>
+
+@endsection
+

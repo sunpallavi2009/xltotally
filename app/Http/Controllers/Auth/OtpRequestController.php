@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\Society;
 use Illuminate\Http\Request;
 use App\Models\OtpVerification;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class OtpRequestController extends Controller
@@ -12,7 +13,7 @@ class OtpRequestController extends Controller
     public function index()
     {
         $society = Society::all();
-        return view('otprequest.index', compact('society'));
+        return view('auth.otprequest', compact('society'));
     }
 
     public function sendOtp(Request $request)
@@ -101,7 +102,7 @@ class OtpRequestController extends Controller
 
     public function showVerificationForm($societyId)
     {
-        return view('otprequest.verify', compact('societyId'));
+        return view('auth.verify-otp', compact('societyId'));
     }
 
     public function verifyOtp(Request $request, $societyId)
