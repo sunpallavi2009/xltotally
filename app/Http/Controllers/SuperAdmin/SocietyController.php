@@ -60,7 +60,7 @@ class SocietyController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|unique:societies',
+            'phone' => 'required|string',
         ]);
 
         $society = Society::findOrFail($id);

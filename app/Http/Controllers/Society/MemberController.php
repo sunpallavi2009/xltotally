@@ -40,23 +40,6 @@ class MemberController extends Controller
         }
     }
 
-
-    // public function getData(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $members = Member::with('society')->latest()->get();
-
-    //         return DataTables::of($members)
-    //             ->addIndexColumn()
-    //             ->addColumn('actions', function($row){
-    //                 $deleteUrl = route('member.destroy', $row->id);
-    //                 return '<a href="javascript:void(0)" class="delete-member" data-url="' . $deleteUrl . '">Delete</a>';
-    //             })
-    //             ->rawColumns(['actions'])
-    //             ->make(true);
-    //     }
-    // }
-
     public function create()
     {
         $society = Auth::guard('society')->user();

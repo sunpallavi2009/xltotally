@@ -1,82 +1,125 @@
-<x-app-layout>
-    <div>
+@extends('layouts.app')
 
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        {{ __('Add Society') }}
-                    </h2>
-
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight text-right">
-                       
-                    </h2>
+@section('content')
+    @include('layouts.partials.topnav', ['title' => 'Society Management'])
+    <div class="row mt-4 mx-4">
+        <div x-data="society" class="col-12">
+            {{-- <div class="text-end alert alert-light" role="alert">
+                    <a href="{{ route('roles.create') }}" class="btn btn-sm mb-0 me-1 btn-primary">Add Role</a>
+            </div> --}}
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <div class="alert alert-light" role="alert">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6 text-start text-white">
+                                    <h6 class="text-black">Add Society</h6>
+                                </div>
+                                <div class="col-lg-6 text-end">
+                                    <a href="{{ route('society.index') }}" class="btn btn-sm mb-0 me-1 btn-primary">Cancel</a>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </header>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-
-                        @if ($errors->any())
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-                                <strong class="font-bold">Whoops!</strong>
-                                <span class="block sm:inline">There were some problems with your input.</span>
-                                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="container-fluid py-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    @if ($errors->any())
+                                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                                            <strong class="font-bold">Whoops!</strong>
+                                            <span class="block sm:inline">There were some problems with your input.</span>
+                                            <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                    <form role="form" method="POST" action="{{ route('society.store') }}" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="name" class="form-control-label">Socity Name</label>
+                                                        <input id="name" name="name" type="text" class="form-control form-control-lg" placeholder="Name" :value="" required autofocus autocomplete="name" />
+                                                        @if ($errors->has('name'))
+                                                            @foreach ($errors->get('name') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="state" class="form-control-label">State</label>
+                                                        <input id="state" name="state" type="text" class="form-control form-control-lg" placeholder="State" :value="" required autofocus autocomplete="state" />
+                                                        @if ($errors->has('state'))
+                                                            @foreach ($errors->get('state') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="city" class="form-control-label">City</label>
+                                                        <input id="city" name="city" type="text" class="form-control form-control-lg" placeholder="City" :value="" required autofocus autocomplete="city" />
+                                                        @if ($errors->has('city'))
+                                                            @foreach ($errors->get('city') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="pincode" class="form-control-label">Pincode</label>
+                                                        <input id="pincode" name="pincode" type="number" class="form-control form-control-lg" placeholder="Pincode" :value="" required autofocus autocomplete="pincode" />
+                                                        @if ($errors->has('pincode'))
+                                                            @foreach ($errors->get('pincode') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="phone" class="form-control-label">Phone</label>
+                                                        <input id="phone" name="phone" type="number" class="form-control form-control-lg" placeholder="Phone" :value="" required autofocus autocomplete="phone" />
+                                                        @if ($errors->has('phone'))
+                                                            @foreach ($errors->get('phone') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="address" class="form-control-label">Address</label>
+                                                        <textarea id="address" name="address" class="form-control form-control-lg" placeholder="Address" :value="" required autofocus autocomplete="address" /></textarea>
+                                                        @if ($errors->has('address'))
+                                                            @foreach ($errors->get('address') as $message)
+                                                                <p class="text-danger text-xs pt-1">{{ $message }}</p>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-end mt-5">
+                                                <button type="submit" class="btn btn-primary btn-sm ms-auto">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        @endif
-
-                        <form method="POST" action="{{ route('society.store') }}" class="space-y-6">
-                            @csrf
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                                <div class="p-4">
-                                    <x-input-label for="name" :value="__('Socity Name')" />
-                                    <x-text-input id="name" class="form-control mt-1" type="text" name="name" required autofocus autocomplete="name" />
-                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                                </div>
-                                <div class="p-4">
-                                    <x-input-label for="state" :value="__('State')" />
-                                    <x-text-input id="state" class="form-control mt-1" type="text" name="state" required autofocus autocomplete="state" />
-                                    <x-input-error :messages="$errors->get('state')" class="mt-2" />
-                                </div>
-                                <div class="p-4">
-                                    <x-input-label for="city" :value="__('City')" />
-                                    <x-text-input id="city" class="form-control mt-1" type="text" name="city" required autofocus autocomplete="city" />
-                                    <x-input-error :messages="$errors->get('city')" class="mt-2" />
-                                </div>
-                                <div class="p-4">
-                                    <x-input-label for="pincode" :value="__('Pincode')" />
-                                    <x-text-input id="pincode" class="form-control mt-1" type="number" name="pincode" required autofocus autocomplete="pincode" />
-                                    <x-input-error :messages="$errors->get('pincode')" class="mt-2" />
-                                </div>
-                                <div class="p-4">
-                                    <x-input-label for="phone" :value="__('Phone')" />
-                                    <x-text-input id="phone" class="form-control mt-1" type="number" name="phone" required autofocus autocomplete="phone" />
-                                    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <x-input-label for="address" :value="__('Address')" />
-                                <textarea id="address" name="address" class="form-control mt-1 block w-full" rows="4" required></textarea>
-                                <x-input-error :messages="$errors->get('address')" class="mt-2" />
-                            </div>
-
-                            <div class="flex justify-end pt-6">
-                                <a href="{{ route('society.index') }}" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ">Cancel</a>
-                                <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 btn btn-warning btn-lg ms-2">Save</button>
-                            </div>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-</x-app-layout>
+@endsection

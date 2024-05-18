@@ -8,37 +8,58 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+        <!-- Argon -->
+        <link rel="stylesheet" href="{{ asset('assets/css/nucleo-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/nucleo-svg.css') }}">
+        <link id="pagestyle"  rel="stylesheet" href="{{ asset('assets/css/argon-dashboard.css') }}">
+
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.0.0/dist/cdn.min.js" defer></script>
-        
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.society-navigation')
+    <body>
 
-            <!-- Page Heading -->
-   
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                      @yield('header')
-                    </div>
-                </header>
-          
+        @guest
+            @yield('content')
+        @endguest
 
-            <!-- Page Content -->
-            <main>
-                @yield('content')
-                
-                {{-- @include('layouts.sidebar') --}}
-            </main>
-        </div>
-        @stack('scripts')
+        @auth
+           
+                <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('{{ asset('assets/images/profile-layout-header.jpg') }}'); background-position-y: 50%;">
+                    <span class="mask bg-primary opacity-6"></span>
+                </div>
+                @include('layouts.partials.societySidenav')
+                    <main class="main-content border-radius-lg">
+                        @yield('content')
+                    </main>
+           
+        @endauth
+
+            <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+            <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+            <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+            <script>
+                var win = navigator.platform.indexOf('Win') > -1;
+                if (win && document.querySelector('#sidenav-scrollbar')) {
+                    var options = {
+                        damping: '0.5'
+                    }
+                    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+                }
+            </script>
+            <!-- Github buttons -->
+            <script async defer src="https://buttons.github.io/buttons.js"></script>
+            <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
+
+            @stack('javascript')
+
     </body>
 </html>

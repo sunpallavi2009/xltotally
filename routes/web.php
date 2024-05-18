@@ -54,13 +54,14 @@ Route::middleware('auth')->group(function () {
 
 
 
+    Route::get('/society/dashboard', [DashboardController::class, 'index'])->name('society.dashboard');
+    Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');
+
     Route::get('/society/login', [OtpRequestController::class, 'index'])->name('otpRequest');
     Route::post('/send-otp', [OtpRequestController::class, 'sendOtp'])->name('sendOtp');
     Route::get('/society/login/verify/{societyId}', [OtpRequestController::class, 'showVerificationForm'])->name('otp.verify');
     Route::post('/society/login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
 
-    Route::get('/society/dashboard', [DashboardController::class, 'index'])->name('society.dashboard');
-    Route::post('/society/logout', [DashboardController::class, 'logout'])->name('society.logout');
 
     Route::get('/society/member', [MemberController::class, 'index'])->name('member.index');
     Route::get('/society/member/get-data', [MemberController::class, 'getData'])->name('member.get-data');
