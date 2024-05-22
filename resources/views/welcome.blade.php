@@ -13,7 +13,7 @@
                                 style="background-image: url('{{ asset('assets/images/signin-ill.jpg') }}');
               background-size: cover;">
                                 <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Xltotally"</h4>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">Xltotally</h4>
                                 <p class="text-white position-relative">Dashboard</p>
                             </div>
                         </div>
