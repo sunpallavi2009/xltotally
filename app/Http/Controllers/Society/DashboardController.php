@@ -11,8 +11,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        //$societiesWithOTP = Society::whereHas('otpVerifications')->with('otpVerifications')->get();
-
         $society = Auth::guard('society')->user();
         
         return view ('society.dashboard', compact('society'));
@@ -23,6 +21,6 @@ class DashboardController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     
-        return redirect()->route('otpRequest'); // Redirect to OTP login page
+        return redirect()->route('otpRequest');
     }
 }
