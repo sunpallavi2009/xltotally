@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-
+@section('title', __('Dashboard'))
 @section('content')
     @include('layouts.partials.guestheader')
     <main class="main-content  mt-0">

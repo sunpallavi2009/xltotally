@@ -63,12 +63,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/society/login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
 
 
-    Route::get('/society/member', [MemberController::class, 'index'])->name('member.index');
-    Route::get('/society/member/get-data', [MemberController::class, 'getData'])->name('member.get-data');
-    Route::get('/society/member/create', [MemberController::class, 'create'])->name('member.create');
-    Route::post('/society/member/import', [MemberController::class, 'memberImport'])->name('member.import');
-    Route::delete('/society/member/{member}', [MemberController::class, 'destroy'])->name('member.destroy');
-    Route::put('/member/{id}/status', [MemberController::class, 'updateStatus'])->name('member.update-status');
+    Route::get('/society/members', [MemberController::class, 'index'])->name('members.index');
+    Route::get('/society/members/get-data', [MemberController::class, 'getData'])->name('members.get-data');
+    Route::get('/society/members/create', [MemberController::class, 'create'])->name('members.create');
+    Route::post('/society/members/import', [MemberController::class, 'memberImport'])->name('members.import');
+    Route::delete('/society/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+    Route::put('/member/{id}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
 
 
 

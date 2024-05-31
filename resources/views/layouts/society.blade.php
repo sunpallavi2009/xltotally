@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>@yield('title') | {{ config('app.name') }}</title>
 
         <!-- Fonts -->
-
+        <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" sizes="16x16" type="image/png">
         <!-- Scripts -->
         {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
         <!-- Argon -->

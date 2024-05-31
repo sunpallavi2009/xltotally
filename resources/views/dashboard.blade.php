@@ -3,6 +3,7 @@
     $roleCount = App\Models\Role::count();
 @endphp
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
+@section('title', __('Admin Dashboard'))
 @section('content')
     @include('layouts.partials.topnav', ['title' => 'Dashboard'])
     <div class="container-fluid py-4">

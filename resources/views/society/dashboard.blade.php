@@ -3,6 +3,7 @@
     $memberCount = App\Models\Member::count();
 @endphp
 @extends('layouts.society', ['class' => 'g-sidenav-show bg-gray-100'])
+@section('title', __('Society Dashboard'))
 @section('content')
     @include('layouts.partials.societyTopnav', ['title' => 'Society Dashboard'])
     <div class="container-fluid py-4">

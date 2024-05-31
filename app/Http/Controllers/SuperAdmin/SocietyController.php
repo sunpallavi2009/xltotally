@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Models\Role;
 use App\Models\Society;
+use App\Models\TallyCompany;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
@@ -15,23 +16,38 @@ class SocietyController extends Controller
         return view ('superadmin.society.index');
     }
 
+    
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $societies = Society::latest()->get();
+            $societies = TallyCompany::latest()->get();
 
             return DataTables::of($societies)
                 ->addIndexColumn()
-                ->addColumn('actions', function($row){
-                    $editUrl = route('society.edit', $row->id);
-                    $deleteUrl = route('society.destroy', $row->id);
-                    return '<a href="javascript:void(0)" class="edit-society" data-url="' . $editUrl . '">Edit</a> | 
-                            <a href="javascript:void(0)" class="delete-society" data-url="' . $deleteUrl . '">Delete</a>';
+                ->addColumn('action', function ($row) {
+                    return '<a href="' . route('members.index', ['guid' => $row->guid]) . '" class="btn btn-primary">View Members</a>';
                 })
-                ->rawColumns(['actions'])
                 ->make(true);
         }
     }
+
+    // public function getData(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $societies = Society::latest()->get();
+
+    //         return DataTables::of($societies)
+    //             ->addIndexColumn()
+    //             ->addColumn('actions', function($row){
+    //                 $editUrl = route('society.edit', $row->id);
+    //                 $deleteUrl = route('society.destroy', $row->id);
+    //                 return '<a href="javascript:void(0)" class="edit-society" data-url="' . $editUrl . '">Edit</a> | 
+    //                         <a href="javascript:void(0)" class="delete-society" data-url="' . $deleteUrl . '">Delete</a>';
+    //             })
+    //             ->rawColumns(['actions'])
+    //             ->make(true);
+    //     }
+    // }
 
     public function create()
     {

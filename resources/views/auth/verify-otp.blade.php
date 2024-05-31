@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-
+@section('title', __('Verify Society'))
 @section('content')
 
     <x-auth-session-status class="mb-4" :status="session('status')" />

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Test
 
 <?php
@@ -171,3 +172,6 @@ class OTPController extends Controller
         return $response;
     }
 }
+=======
+test
+>>>>>>> 945a7952e997cbd26e6b5e3635151d0d429c2429

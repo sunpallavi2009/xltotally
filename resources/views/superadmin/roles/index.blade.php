@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', __('Role Management'))
 @section('content')
     @include('layouts.partials.topnav', ['title' => 'Role Management'])
     <div class="row mt-4 mx-4">

@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
-
+@section('title', __('Admin Profile'))
 @section('content')
     @include('layouts.partials.topnav', ['title' => 'Your Profile'])
     <div class="card shadow-lg mx-4 card-profile-bottom">
