@@ -43,11 +43,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/society', [SocietyController::class, 'index'])->name('society.index');
     Route::get('/society/get-data', [SocietyController::class, 'getData'])->name('society.get-data');
-    Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
-    Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
-    Route::delete('/society/{society}', [SocietyController::class, 'destroy'])->name('society.destroy');
-    Route::get('/society/{society}/edit', [SocietyController::class, 'edit'])->name('society.edit');
-    Route::put('/society/{society}/update', [SocietyController::class, 'update'])->name('society.update');
+    Route::get('/society/webpanel', [SocietyController::class, 'societyDashboard'])->name('webpanel.index');
+    Route::get('/members', [MemberController::class, 'memberIndex'])->name('members.index');
+    Route::get('/members/get-data', [MemberController::class, 'membergetData'])->name('members.get-data');
+    Route::get('/vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
+    Route::get('vouchers/get-data', [VoucherController::class, 'getData'])->name('vouchers.get-data');
+    // Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
+    // Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
+    // Route::delete('/society/{society}', [SocietyController::class, 'destroy'])->name('society.destroy');
+    // Route::get('/society/{society}/edit', [SocietyController::class, 'edit'])->name('society.edit');
+    // Route::put('/society/{society}/update', [SocietyController::class, 'update'])->name('society.update');
 
 
 });
@@ -63,12 +68,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/society/login/verify/{societyId}', [OtpRequestController::class, 'verifyOtp'])->name('otp.verify.submit');
 
 
-    Route::get('/society/members', [MemberController::class, 'index'])->name('members.index');
-    Route::get('/society/members/get-data', [MemberController::class, 'getData'])->name('members.get-data');
-    Route::get('/society/members/create', [MemberController::class, 'create'])->name('members.create');
-    Route::post('/society/members/import', [MemberController::class, 'memberImport'])->name('members.import');
-    Route::delete('/society/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
-    Route::put('/member/{id}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
+    Route::get('/society/member', [MemberController::class, 'index'])->name('member.index');
+    Route::get('/society/member/get-data', [MemberController::class, 'getData'])->name('member.get-data');
+    Route::get('/society/member/create', [MemberController::class, 'create'])->name('member.create');
+    Route::post('/society/member/import', [MemberController::class, 'memberImport'])->name('member.import');
+    Route::delete('/society/member/{member}', [MemberController::class, 'destroy'])->name('member.destroy');
+    Route::put('/member/{id}/status', [MemberController::class, 'updateStatus'])->name('member.update-status');
 
 
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Society;
 
 use App\Models\Member;
+use App\Models\TallyLedger;
+use App\Models\TallyCompany;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,109 +13,80 @@ use Yajra\DataTables\Facades\DataTables;
 
 class MemberController extends Controller
 {
-    public function index()
-    {
-        $society = Auth::guard('society')->user();
-        return view ('society.member.index', compact('society'));
-    }
 
-    public function getData(Request $request)
+    public function memberIndex(Request $request)
+    {
+        $societyGuid = $request->query('guid');
+        $group = $request->query('group', 'Sundry Debtors'); // default to 'Sundry Debtors' if not provided
+        $society = TallyCompany::where('guid', 'like', "$societyGuid%")->get();
+        return view('superadmin.members.index', compact('society', 'societyGuid', 'group'));
+    }
+    public function membergetData(Request $request)
     {
         if ($request->ajax()) {
-            // Get the currently logged-in society ID
-            $societyId = Auth::guard('society')->id();
-
-            // Fetch members belonging to the logged-in society
-            $members = Member::with('society')
-                ->where('society_id', $societyId)
+            $societyGuid = $request->query('guid');
+            $group = $request->query('group');
+    
+            $society = TallyCompany::where('guid', 'like', "$societyGuid%")->first();
+    
+            if (!$society) {
+                return response()->json(['message' => 'Society not found'], 404);
+            }
+    
+            $query = TallyLedger::where('guid', 'like', $society->guid . '%');
+    
+            if ($group == 'Sundry Debtors') {
+                $query->where('primary_group', 'Sundry Debtors')
+                      ->whereNotNull('alias1')
+                      ->where('alias1', '!=', '');
+            } else {
+                $query->where('primary_group', '!=', 'Sundry Debtors');
+            }
+    
+            $members = $query->withCount('vouchers')
+                ->with('vouchers')
                 ->latest()
-                ->get();
-
+                ->get()
+                ->map(function($member) {
+                    $member->first_voucher_date = $member->firstVoucherDate();
+                    return $member;
+                });
+    
             return DataTables::of($members)
                 ->addIndexColumn()
-                ->addColumn('actions', function($row){
-                    $deleteUrl = route('member.destroy', $row->id);
-                    return '<a href="javascript:void(0)" class="delete-member" data-url="' . $deleteUrl . '">Delete</a>';
-                })
-                ->rawColumns(['actions'])
                 ->make(true);
         }
     }
+    
 
-    public function create()
-    {
-        $society = Auth::guard('society')->user();
-        return view ('society.member._create', compact('society'));
-    }
+    // public function membergetData(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $societyGuid = $request->query('guid');
 
-    public function memberImport(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file'
-        ]);
+    //         $society = TallyCompany::where('guid', 'like', "$societyGuid%")->first();
 
-        // Get the logged-in society
-        $society = Auth::guard('society')->user();
+    //         if (!$society) {
+    //             return response()->json(['message' => 'Society not found'], 404);
+    //         }
 
-        $file = $request->file('file');
+    //         $members = TallyLedger::where('guid', 'like', $society->guid . '%')
+    //             ->whereNotNull('alias1')
+    //             ->where('alias1', '!=', '')
+    //             ->withCount('vouchers')
+    //             ->with('vouchers')
+    //             ->latest()
+    //             ->get()
+    //             ->map(function($member) {
+    //                 $member->first_voucher_date = $member->firstVoucherDate();
+    //                 return $member;
+    //             });
 
-        $spreadsheet = IOFactory::load($file);
-
-        $worksheet = $spreadsheet->getActiveSheet();
-
-        $dataArray = $worksheet->toArray(null, true, true, true);
-
-        $headings = array_shift($dataArray);
-
-        $records = [];
-
-        foreach ($dataArray as $row) {
-            $record = array_combine($headings, $row);
-            $records[] = $record;
-        }
-
-        $json_data = json_encode($records);
-
-        $json_file_path = storage_path('app/' . $file->getClientOriginalName() . '.json');
-        $jsonData = file_put_contents($json_file_path, $json_data);
-
-        $jsonData = file_get_contents(storage_path('app/' . $file->getClientOriginalName() . '.json'));
-        $data = json_decode($jsonData, true);
-
-        foreach ($data as $entry) {
-            
-            Member::create([
-                'name' => $entry['Member Name'],
-                'phone' => $entry['Phone'],
-                'address' => $entry['Address'],
-                'alias' => $entry['Alias'],
-                'balance' => $entry['Balance'],
-                'total_vouchar' => $entry['Total Vouchar'],
-                'society_id' => $society->id,
-                'status' => 'Active',
-            ]);
-
-        }
-
-        return redirect()->route('member.index')->with('success', __('Member Data Save Successfully.'));
-
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $member = Member::findOrFail($id);
-        $member->status = $request->status;
-        $member->save();
-
-        return response()->json(['success' => true]);
-    }
+    //         return DataTables::of($members)
+    //             ->addIndexColumn()
+    //             ->make(true);
+    //     }
+    // }
 
 
-    public function destroy($id)
-    {
-        $member = Member::findOrFail($id);
-        $member->delete();
-
-        return response()->json(['success' => 'Member deleted successfully.']);
-    }
 }

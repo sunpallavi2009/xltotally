@@ -15,6 +15,7 @@
         <!-- Scripts -->
         {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
         <!-- Argon -->
+        <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/nucleo-icons.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/nucleo-svg.css') }}">
         <link id="pagestyle"  rel="stylesheet" href="{{ asset('assets/css/argon-dashboard.css') }}">

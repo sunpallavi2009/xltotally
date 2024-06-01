@@ -5,17 +5,6 @@
     <div class="row mt-4 mx-4">
         <div class="col-12">
             <div class="card mb-4">
-                {{-- <div class="card-header pb-0">
-                    <div class="alert alert-light" role="alert">
-                        <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-lg-6 text-start text-white">
-                                    <h6 class="text-black">Society</h6>
-                                </div>
-                            </div>  
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="card-body px-4 pt-6 pb-2">
                     <div class="table-responsive p-0">
                         <table id="society-datatable" class="display" style="width:100%">
@@ -56,7 +45,7 @@
                                     data: 'name',
                                     name: 'name',
                                     render: function(data, type, row, meta) {
-                                        var url = "{{ route('members.index') }}?guid=" + row.guid;
+                                        var url = "{{ route('webpanel.index') }}?guid=" + row.guid;
                                         return '<a href="' + url + '" style="color: #337ab7;">' + data + '</a>';
                                     }
                                 },
@@ -65,9 +54,36 @@
                                 {data: 'website', name: 'website'},
                                 {data: 'company_number', name: 'company_number'},
                             ],
-                            dom: 'Bfrtip',
+                            dom: 'Blfrtip',
                             buttons: [
-                                'excel', 'pdf', 'print', 'colvis',
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        modifier: {
+                                            page: 'all'
+                                        }
+                                    }
+                                },
+                                {
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        modifier: {
+                                            page: 'all'
+                                        }
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        modifier: {
+                                            page: 'all'
+                                        }
+                                    }
+                                },
+                                'colvis',
                                 {
                                     extend: 'searchBuilder',
                                     config: {
@@ -76,8 +92,12 @@
                                 }
                             ],
                             order: [[0, 'asc']],
+                            lengthMenu: [
+                                [10, 25, 50, 100, -1], // Display options
+                                ['10', '25', '50', '100', 'All'] // Labels for options
+                            ],
                         });
-        
+
                         $('#clear-filters').click(function () {
                             $("#name").val('').trigger('change');
                             $('#society-datatable').DataTable().search('').draw();
