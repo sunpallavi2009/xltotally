@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\OtpRequestController;
 use App\Http\Controllers\Society\MemberController;
+use App\Http\Controllers\Auth\OtpRequestController;
+use App\Http\Controllers\SuperAdmin\BillController;
+use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\Society\DashboardController;
 use App\Http\Controllers\SuperAdmin\SocietyController;
+use App\Http\Controllers\SuperAdmin\VoucherController;
+use App\Http\Controllers\SuperAdmin\VoucherEntryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/society/webpanel', [SocietyController::class, 'societyDashboard'])->name('webpanel.index');
     Route::get('/members', [MemberController::class, 'memberIndex'])->name('members.index');
     Route::get('/members/get-data', [MemberController::class, 'membergetData'])->name('members.get-data');
-    Route::get('/vouchers', [VoucherController::class, 'index'])->name('vouchers.index');
-    Route::get('vouchers/get-data', [VoucherController::class, 'getData'])->name('vouchers.get-data');
+    Route::get('/ledgerDetails', [VoucherController::class, 'index'])->name('vouchers.index');
+    Route::get('/ledgerDetails/get-data', [VoucherController::class, 'getData'])->name('vouchers.get-data');
+
+    Route::get('/voucherEntry', [VoucherEntryController::class, 'index'])->name('voucherEntry.index');
+    Route::get('/voucherEntry/get-data', [VoucherEntryController::class, 'getData'])->name('voucherEntry.get-data');
+
+    
+    Route::get('/bills', [BillController::class, 'index'])->name('bills.index');
+    Route::get('/bills/get-data', [BillController::class, 'getData'])->name('bills.get-data');
     // Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
     // Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
     // Route::delete('/society/{society}', [SocietyController::class, 'destroy'])->name('society.destroy');

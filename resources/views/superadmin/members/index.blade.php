@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title', __('Ledgers Management'))
+@section('title', __('Member Ledgers'))
 @section('content')
-    @include('layouts.partials.topnav', ['title' => 'Ledgers Management'])
+    @include('layouts.partials.topnav', ['title' => 'Member Ledgers'])
     <div class="row mt-4 mx-4">
         <div class="col-12">
             <div class="card mb-4">
@@ -15,6 +15,7 @@
                                             <h3><b>{{ $company->name }}</b></h3>
                                             <h6>{{ $company->address1 }}</h6>
                                         @endforeach
+                                        {{-- <h6>{{ $group }}</h6> --}}
                                     </h6>
                                 </div>
                             </div>  
@@ -43,106 +44,118 @@
                     </div>
                 </div>
             </div>
-            
             @push('javascript')
                 <script>
-                    $(document).ready(function() {
-                        $('#ledger-datatable').DataTable({
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "{{ route('members.get-data') }}",
-                                type: 'GET',
-                                data: function(d) {
-                                    d.guid = "{{ $societyGuid }}";
-                                    d.group = "{{ $group }}"; // Pass the group parameter
-                                }
-                            },
-                            columns: [
-                                {data: 'id', name: 'id'},
-                                {
-                                    data: 'name',
-                                    name: 'name',
-                                    render: function(data, type, row, meta) {
-                                        var url = "{{ route('vouchers.index') }}?ledger_guid=" + row.guid;
-                                        return '<a href="' + url + '" style="color: #337ab7;">' + data + '</a>';
-                                    }
-                                },
-                                {data: 'alias1', name: 'alias1'},
-                                {data: 'parent', name: 'parent'},
-                                {data: 'primary_group', name: 'primary_group'},
-                                {data: 'this_year_balance', name: 'this_year_balance'},
-                                {data: 'vouchers_count', name: 'vouchers_count'},
-                                {
-                                    data: 'first_voucher_date',
-                                    name: 'first_voucher_date',
-                                    render: function(data, type, row, meta) {
-                                        return new Date(data).toISOString();
-                                    }
-                                }
-                            ],
-                            dom: 'Blfrtip',
-                            lengthMenu: [
-                                [10, 25, 50, 100, -1], // Display options
-                                ['10', '25', '50', '100', 'All'] // Labels for options
-                            ],
-                            buttons: [
-                                {
-                                    extend: 'excel',
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        modifier: {
-                                            page: 'all' // Export all pages of data
-                                        }
-                                    }
-                                },
-                                {
-                                    extend: 'pdf',
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        modifier: {
-                                            page: 'all' // Export all pages of data
-                                        }
-                                    }
-                                },
-                                {
-                                    extend: 'print',
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        modifier: {
-                                            page: 'all' // Export all pages of data
-                                        }
-                                    }
-                                },
-                                'colvis',
-                                {
-                                    extend: 'searchBuilder',
-                                    config: {
-                                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                                    },
-                                    i18n: {
-                                        conditions: {
-                                            date: {
-                                                '=': 'Equals',
-                                                '!=': 'Not equal',
-                                                'before': 'Before',
-                                                'after': 'After'
-                                            }
-                                        },
-                                        date: {
-                                            format: 'YYYY-MM-DD'
-                                        }
-                                    }
-                                }
-                            ],
-                            order: [[0, 'asc']],
-                        });
+                  $(document).ready(function() {
+    var table = $('#ledger-datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('members.get-data') }}",
+            type: 'GET',
+            data: function(d) {
+                d.guid = "{{ $societyGuid }}";
+                d.group = "{{ $group }}"; // Pass the group parameter
+            }
+        },
+        columns: [
+            {data: 'id', name: 'id'},
+            {
+                data: 'name',
+                name: 'name',
+                render: function(data, type, row, meta) {
+                    var url = "{{ route('vouchers.index') }}?ledger_guid=" + row.guid;
+                    return '<a href="' + url + '" style="color: #337ab7;">' + data + '</a>';
+                }
+            },
+            {data: 'alias1', name: 'alias1'},
+            {data: 'parent', name: 'parent'},
+            {data: 'primary_group', name: 'primary_group'},
+            {data: 'this_year_balance', name: 'this_year_balance'},
+            {data: 'vouchers_count', name: 'vouchers_count'},
+            {
+                data: 'first_voucher_date',
+                name: 'first_voucher_date',
+                render: function(data, type, row, meta) {
+                    return new Date(data).toISOString();
+                }
+            }
+        ],
+        dom: 'Blfrtip',
+        lengthMenu: false, // Disable length menu
+        buttons: [
+            {
+                extend: 'excel',
+                exportOptions: {
+                    columns: ':visible',
+                    modifier: {
+                        page: 'all' // Export all pages of data
+                    }
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':visible',
+                    modifier: {
+                        page: 'all' // Export all pages of data
+                    }
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible',
+                    modifier: {
+                        page: 'all' // Export all pages of data
+                    }
+                }
+            },
+            'colvis',
+            {
+                extend: 'searchBuilder',
+                config: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                },
+                i18n: {
+                    conditions: {
+                        date: {
+                            '=': 'Equals',
+                            '!=': 'Not equal',
+                            'before': 'Before',
+                            'after': 'After'
+                        }
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD'
+                    }
+                }
+            }
+        ],
+        paging: false, // Disable pagination
+        order: [[0, 'asc']],
+        footerCallback: function (row, data, start, end, display) {
+            var api = this.api();
+            var balanceTotal = api.column(5, { page: 'current' }).data().reduce(function (acc, val) {
+                return acc + parseFloat(val);
+            }, 0);
+            var vouchersTotal = api.column(6, { page: 'current' }).data().reduce(function (acc, val) {
+                return acc + parseFloat(val);
+            }, 0);
 
-                        $('#clear-filters').click(function () {
-                            $("#name").val('').trigger('change');
-                            $('#ledger-datatable').DataTable().search('').draw();
-                        });
-                    });
+            $(api.column(5).footer()).html('Total Balance: ' + balanceTotal.toFixed(2));
+            $(api.column(6).footer()).html('Total Vouchers: ' + vouchersTotal.toFixed(2));
+        }
+    });
+
+    $('#clear-filters').click(function () {
+        $("#name").val('').trigger('change');
+        table.search('').draw();
+    });
+});
+
+
+
                 </script>
             @endpush
         </div>
