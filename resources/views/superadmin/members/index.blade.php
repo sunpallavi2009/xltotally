@@ -79,7 +79,20 @@
                                 {data: 'alias1', name: 'alias1'},
                                 {data: 'parent', name: 'parent'},
                                 {data: 'primary_group', name: 'primary_group'},
-                                {data: 'this_year_balance', name: 'this_year_balance'},
+                                {
+                                    data: 'this_year_balance',
+                                    name: 'this_year_balance',
+                                    render: function(data, type, row, meta) {
+                                        if (isNaN(data)) {
+                                            return data;
+                                        }
+                                        var balance = parseFloat(data);
+                                        balance = Math.abs(balance); // Ensure the balance is positive
+                                        balance = balance.toFixed(2); // Format to 2 decimal places
+                                        balance = balance.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
+                                        return balance; // Return formatted balance without currency symbol
+                                    }
+                                },
                                 {data: 'vouchers_count', name: 'vouchers_count'},
                                 {
                                     data: 'first_voucher_date',
@@ -144,15 +157,22 @@
                             order: [[0, 'asc']],
                             footerCallback: function (row, data, start, end, display) {
                                 var api = this.api();
+
+                                // Calculate the total balance for the current page
                                 var balanceTotal = api.column(4, { page: 'current' }).data().reduce(function (acc, val) {
-                                    return acc + parseFloat(val);
+                                    return acc + parseFloat(val.replace(/,/g, ''));
                                 }, 0);
+                                balanceTotal = Math.abs(balanceTotal); // Ensure the total balance is positive
+
+                                // Calculate the total vouchers count for the current page
                                 var vouchersTotal = api.column(5, { page: 'current' }).data().reduce(function (acc, val) {
                                     return acc + parseFloat(val);
                                 }, 0);
+                                vouchersTotal = Math.abs(vouchersTotal); // Ensure the total vouchers count is positive
 
-                                $(api.column(4).footer()).html(balanceTotal.toFixed(2));
-                                $(api.column(5).footer()).html(vouchersTotal.toFixed(2));
+                                // Format the totals and update the footer
+                                $(api.column(4).footer()).html(balanceTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                $(api.column(5).footer()).html(vouchersTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
                             }
 
                         });

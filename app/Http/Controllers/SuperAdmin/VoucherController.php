@@ -25,6 +25,11 @@ class VoucherController extends Controller
     {
         if ($request->ajax()) {
             $ledgerGuid = $request->query('ledger_guid');
+
+            $societyGuid = explode('-', $ledgerGuid)[0];
+            $society = TallyCompany::where('guid', 'like', "$societyGuid%")->first();
+
+
             $fromDate = $request->query('from_date');
             $toDate = $request->query('to_date');
 
@@ -40,6 +45,7 @@ class VoucherController extends Controller
 
             $vouchers = $query->latest()->get();
 
+            
             return DataTables::of($vouchers)
                 ->editColumn('voucher_date', function ($voucher) {
                     $date = Carbon::parse($voucher->voucher_date);
@@ -52,6 +58,7 @@ class VoucherController extends Controller
                     return $voucher->amount >= 0 ? $voucher->amount : '';
                 })
                 ->addIndexColumn()
+                ->with(['societyGuid' => $societyGuid]) 
                 ->make(true);
         }
     }
