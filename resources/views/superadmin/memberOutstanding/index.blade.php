@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title', __('Bill Ledgers'))
+@section('title', __('Member Outstanding'))
 @section('content')
-    @include('layouts.partials.topnav', ['title' => 'Bill Ledgers'])
+    @include('layouts.partials.topnav', ['title' => 'Member Outstanding'])
     <div class="row mt-4 mx-4">
         <div class="col-12">
             <div class="card mb-4">
@@ -14,7 +14,7 @@
                                         <h3><b>{{ $company->name }}</b></h3>
                                         <h6>{{ $company->address1 }}</h6>
                                     @endforeach
-                                    <p> Bills </p>
+                                    <p> Member Outstanding </p>
                                 </div>
                             </div>
                         </div>
@@ -23,8 +23,12 @@
                 <div class="card-body px-4 pt-6 pb-2">
                     <div class="row mb-4">
                         <div class="col-md-3">
-                            <label for="bill_date">Bill Date:</label>
-                            <input class="form-control" type="date" id="bill_date" value="{{ date('Y-m-d') }}" onfocus="focused(this)" onfocusout="defocused(this)" disabled>
+                            <label for="from_date">From Date:</label>
+                            <input class="form-control" type="date" id="from_date" value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="to_date">To Date:</label>
+                            <input class="form-control" type="date" id="to_date" value="{{ date('Y-m-d') }}">
                         </div>
                         {{-- <div class="col-md-3 align-self-end mt-4">
                             <button id="search" class="btn btn-primary">Search</button>
@@ -32,17 +36,15 @@
                         </div> --}}
                     </div>
                     <div class="table-responsive p-0">
-                        <table id="bill-datatable" class="display" style="width:100%">
+                        <table id="memberOutstanding-datatable" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    {{-- <th>SR. NO.</th> --}}
                                     <th>Name</th>
                                     <th>Alias</th>
                                     <th>Vch No.</th>
-                                    <th>Bill Date</th>
+                                    <th>From Date</th>
                                     <th>Opening Bal</th>
-                                    <th>Bill Amount</th>
-                                    <th>Outstanding</th>
+                                    <th>Billed Amount</th>
                                     <th>Received</th>
                                     <th>Due Amt</th>
                                 </tr>
@@ -50,6 +52,16 @@
                             <tbody>
                                 <!-- Data will be populated by DataTables -->
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total</th>
+                                    <th colspan="3"></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>0.00</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -58,37 +70,24 @@
             @push('javascript')
                 <script>
                     $(document).ready(function() {
-                        // Function to format date to YYYY-MM-DD
-                        function formatDateToInput(date) {
-                            var parts = date.split("-");
-                            return parts[2] + "-" + parts[1] + "-" + parts[0];
-                        }
-
-                        // Get URL parameters
-                        var urlParams = new URLSearchParams(window.location.search);
-                        var dateParam = urlParams.get('date');
-                        if (dateParam) {
-                            $('#bill_date').val(formatDateToInput(dateParam));
-                        }
-
-                        $('#bill-datatable').DataTable({
+                        // Initialize DataTable and store the instance in a variable
+                        var dataTable = $('#memberOutstanding-datatable').DataTable({
                             processing: true,
                             serverSide: true,
                             paging: false, // Disable pagination
                             ajax: {
-                                url: "{{ route('bills.get-data') }}",
+                                url: "{{ route('memberOutstanding.get-data') }}",
                                 type: 'GET',
                                 data: function(d) {
                                     d.guid = "{{ $societyGuid }}";
                                     d.group = "{{ $group }}";
-                                    var billDate = $('#bill_date').val();
-                                    // var billDate = '2019-09-09'; 
-                                    // console.log('Bill Date:', billDate); 
-                                    d.bill_date = billDate;
+                                    var fromDate = $('#from_date').val();
+                                    var toDate = $('#to_date').val();
+                                    d.from_date = fromDate;
+                                    d.to_date = toDate;
                                 }
                             },
                             columns: [
-                                // {data: 'id', name: 'id'},
                                 {
                                     data: 'name',
                                     name: 'name',
@@ -97,72 +96,49 @@
                                         return '<a href="' + url + '" style="color: #337ab7;">' + data + '</a>';
                                     }
                                 },
-                                {data: 'alias1', name: 'alias1'},
-                                {data: 'voucher_number', name: 'voucher_number'},
+                                { data: 'alias1', name: 'alias1' },
+                                { data: 'voucher_number', name: 'voucher_number' },
                                 {
-                                    data: 'first_voucher_date',
-                                    name: 'first_voucher_date',
+                                    data: null,
+                                    name: 'from_date',
                                     render: function(data, type, row, meta) {
-                                        return new Date(data).toISOString();
+                                        var fromDate = $('#from_date').val();
+                                        return fromDate;
                                     }
                                 },
-                                {data: 'amount', name: 'amount'},
+                                { data: 'amount', name: 'amount' },
                                 {
                                     data: 'this_year_balance',
                                     name: 'this_year_balance',
                                     render: function(data, type, row, meta) {
-                                        return Math.abs(data); // Remove the sign
-                                    }
-                                },
-                                {
-                                    data: null,
-                                    name: 'outstanding',
-                                    render: function(data, type, row, meta) {
-                                        // Convert values to numbers
-                                        var openingBal = parseFloat(Math.abs(row.this_year_balance));
-                                        var billAmount = parseFloat(row.amount);
-                                        // Check if the values are numeric
-                                        if (!isNaN(openingBal) && !isNaN(billAmount)) {
-                                            // Calculate Outstanding (Opening Bal + Bill Amount)
-                                            var outstanding = openingBal + billAmount;
-                                            // Check if outstanding is a number
-                                            if (!isNaN(outstanding)) {
-                                                return outstanding;
-                                            } else {
-                                                return "N/A"; // Return "Not Available" if outstanding is not a number
-                                            }
-                                        } 
+                                        return Math.abs(data).toFixed(2); // Remove the sign and format to 2 decimal places
                                     }
                                 },
                                 {
                                     data: null,
                                     name: 'received',
                                     render: function(data, type, row, meta) {
-                                        // Always display Received as 0.00
-                                        return '0.00';
+                                        return '0.00'; // Always display Received as 0.00
                                     }
                                 },
                                 {
                                     data: null,
                                     name: 'due_amt',
                                     render: function(data, type, row, meta) {
-                                        // Convert values to numbers
                                         var openingBal = parseFloat(Math.abs(row.this_year_balance));
                                         var billAmount = parseFloat(row.amount);
-                                        // Check if the values are numeric
                                         if (!isNaN(openingBal) && !isNaN(billAmount)) {
-                                            // Calculate Outstanding (Opening Bal + Bill Amount)
-                                            var outstanding = openingBal + billAmount;
-                                            // Check if outstanding is a number
-                                            if (!isNaN(outstanding)) {
-                                                return outstanding;
+                                            var due_amt = openingBal + billAmount;
+                                            if (!isNaN(due_amt)) {
+                                                return due_amt.toFixed(2);
                                             } else {
                                                 return "N/A"; // Return "Not Available" if outstanding is not a number
                                             }
-                                        } 
+                                        } else {
+                                            return "N/A";
+                                        }
                                     }
-                                },
-
+                                }
                             ],
                             dom: 'Blfrtip',
                             lengthMenu: [
@@ -219,19 +195,49 @@
                                 }
                             ],
                             order: [[0, 'asc']],
+
+                            footerCallback: function (row, data, start, end, display) {
+                                    var api = this.api();
+
+                                    // Calculate the total balance for the current page
+                                    var OpeningBalTotal = api.column(4, { page: 'current' }).data().reduce(function (acc, val) {
+                                        return acc + parseFloat(val.replace(/,/g, '') || 0);
+                                    }, 0);
+                                    OpeningBalTotal = Math.abs(OpeningBalTotal); // Ensure the total balance is positive
+
+                                    // Calculate the total billed amount for the current page
+                                    var BilledAmountTotal = api.column(5, { page: 'current' }).data().reduce(function (acc, val) {
+                                        return acc + parseFloat(val.replace(/,/g, '') || 0);
+                                    }, 0);
+                                    BilledAmountTotal = Math.abs(BilledAmountTotal); // Ensure the total billed amount is positive
+
+                                    // Calculate the total due amount for the current page
+                                    var DueAmtTotal = OpeningBalTotal + BilledAmountTotal;
+
+                                    // Format the totals and update the footer
+                                    $(api.column(4).footer()).html(OpeningBalTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                    $(api.column(5).footer()).html(BilledAmountTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                    $(api.column(7).footer()).html(DueAmtTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                }
+
                         });
 
-                        $('#bill_date').on('change', function() {
+                        // Reload the table when date inputs change
+                        $('#from_date, #to_date').on('change', function() {
                             dataTable.ajax.reload();
                         });
 
-                        // $('#clear-filters').click(function () {
-                        //     $("#name").val('').trigger('change');
-                        //     $('#bill-datatable').DataTable().search('').draw();
-                        // });
+                        // Clear filters button
+                        $('#clear-filters').click(function() {
+                            $("#name").val('').trigger('change');
+                            dataTable.search('').draw();
+                        });
 
-                        $('#search').click(function () {
-                            var url = "{{ route('bills.index') }}?date=" + formattedDate + "&guid=" + guid;
+                        // Search button
+                        $('#search').click(function() {
+                            var fromDate = $('#from_date').val();
+                            var toDate = $('#to_date').val();
+                            var url = "{{ route('memberOutstanding.index') }}?from_date=" + fromDate + "&to_date=" + toDate + "&guid=" + "{{ $societyGuid }}";
                             window.location.href = url;
                         });
                     });

@@ -76,8 +76,9 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="4" style="text-align: left;"><b>Closing Balance</b></td>
-                                    <td id="closing-balance" style="text-align: right;"></td>
+                                    <td colspan="3" style="text-align: left;"><b>Closing Balance</b></td>
+                                    <td id="closing-debit" style="text-align: right;"></td>
+                                    <td id="closing-credit" style="text-align: right;"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -98,11 +99,6 @@
                     $(document).ready(function() {
                         var openingBalance = 0.00; // Set the initial opening balance value
 
-                        // function calculateOpeningBalance(data) {
-                        //     // openingBalance = parseFloat(data.balance_amount) - parseFloat(data.amount);
-                        //     openingBalance = 11;
-                        // }
-
                         var table = $('#voucher-datatable').DataTable({
                             processing: true,
                             serverSide: true,
@@ -117,21 +113,28 @@
                                 dataSrc: function(json) {
                                     var openingBalance = 0.00;
 
-                                        if (json.data.length > 0) {
-                                            var balance = parseFloat(json.data[0].balance_amount);
-                                            var amount = parseFloat(json.data[0].amount);
-                                            openingBalance = balance - (-amount); // Calculate opening balance using the formula
-                                        }
+                                    if (json.data.length > 0) {
+                                        var balance = parseFloat(json.data[0].balance_amount);
+                                        var amount = parseFloat(json.data[0].amount);
+                                        openingBalance = balance - amount; // Calculate opening balance using the formula
+                                    }
+
                                     // Prepend opening balance row to the data
                                     var openingBalanceRow = {
                                         voucher_date: '', 
                                         credit_ledger: '<b>Opening Balance</b>', 
                                         type: '', 
                                         voucher_number: '', 
-                                        debit: openingBalance.toFixed(2) , 
-                                        credit: '',
+                                        debit: openingBalance >= 0 ? openingBalance.toFixed(2) : '0.00', 
+                                        credit: openingBalance < 0 ? Math.abs(openingBalance).toFixed(2) : '0.00',
                                         balance_amount: '',
                                     };
+
+                                    if (openingBalance === 0) {
+                                        openingBalanceRow.debit = '0.00';
+                                        openingBalanceRow.credit = '0.00';
+                                    }
+
                                     json.data.unshift(openingBalanceRow);
                                     return json.data;
                                 }
@@ -144,7 +147,7 @@
                                     name: 'type',
                                     render: function(data, type, row, meta) {
                                         if (data === 'Bill' || data === 'Rcpt') {
-                                            var companyGuid = '<?php echo $society->guid; ?>';
+                                            var companyGuid = '{{ $society->guid }}';
                                             var ledgerGuid = row.ledger_guid;
                                             var vchDate = moment(row.voucher_date).format('DD/MM/YYYY');
                                             var vchNumber = row.voucher_number;
@@ -160,19 +163,6 @@
                                         }
                                     }
                                 },
-
-
-                                // {
-                                //     data: 'type', 
-                                //     name: 'type',
-                                //     render: function(data, type, row, meta) {
-                                //         if (data === 'Bill' || data === 'Rcpt') {
-                                //             return '<a href="#" " style="color: #337ab7;" class="download-pdf" data-voucher-id="' + row.id + '">' + data + '</a>';
-                                //         } else {
-                                //             return data; // If not 'Bill' or 'Rcpt', just return the data without anchor tag
-                                //         }
-                                //     }
-                                // },
                                 {data: 'voucher_number', name: 'voucher_number'},
                                 {data: 'debit', name: 'debit'},
                                 {data: 'credit', name: 'credit'},
@@ -180,16 +170,18 @@
                                     data: 'balance_amount',
                                     name: 'balance_amount',
                                     render: function(data, type, row, meta) {
-                                        if (isNaN(data)) {
-                                            return data;
+                                        if (isNaN(data) || data === null) {
+                                            return "0.00";
                                         }
                                         var balance_amount = parseFloat(data);
-                                        balance_amount = Math.abs(balance_amount); // Ensure the balance is positive
+                                        if (balance_amount === 0) {
+                                            return "0.00";
+                                        }
                                         balance_amount = balance_amount.toFixed(2); // Format to 2 decimal places
                                         balance_amount = balance_amount.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
                                         return balance_amount; // Return formatted balance without currency symbol
                                     }
-                                },
+                                }
                             ],
                             dom: 'Blfrtip',
                             lengthMenu: [
@@ -245,22 +237,49 @@
                         });
 
                         function calculateClosingBalance() {
-                            var totalDebit = 0.00;
-                            var totalCredit = 0.00;
+                                var totalDebit = 0.00;
+                                var totalCredit = 0.00;
 
-                            $('#voucher-datatable tbody tr').each(function() {
-                                var debit = parseFloat($(this).find('td:nth-child(5)').text().replace(/,/g, '')) || 0;
-                                var credit = parseFloat($(this).find('td:nth-child(6)').text().replace(/,/g, '')) || 0;
-                                totalDebit += debit;
-                                totalCredit += credit;
-                            });
+                                $('#voucher-datatable tbody tr').each(function() {
+                                    var debit = parseFloat($(this).find('td:nth-child(5)').text().replace(/,/g, '')) || 0;
+                                    var credit = parseFloat($(this).find('td:nth-child(6)').text().replace(/,/g, '')) || 0;
+                                    totalDebit += debit;
+                                    totalCredit += credit;
+                                });
 
-                            $('#total-debit').text(totalDebit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#total-credit').text(totalCredit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                $('#total-debit').text(totalDebit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                $('#total-credit').text(totalCredit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 
-                            var totalBalance = totalCredit - totalDebit;
-                            $('#closing-balance').text(Math.abs(totalBalance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                        }
+                                var totalBalance = totalCredit - totalDebit;
+
+                                // Check if the total balance is positive or negative
+                                if (totalBalance >= 0) {
+                                    $('#closing-debit').text(totalBalance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                    $('#closing-credit').text('0.00');
+                                } else {
+                                    $('#closing-debit').text('0.00');
+                                    $('#closing-credit').text(Math.abs(totalBalance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                }
+                            }
+
+
+                        // function calculateAdditionalSum() {
+                        //     var additionalSumDebit = 0.00;
+                        //     var additionalSumCredit = 0.00;
+
+                        //     $('#voucher-datatable tbody tr').each(function() {
+                        //         var debit = parseFloat($(this).find('td:nth-child(5)').text().replace(/,/g, '')) || 0;
+                        //         var credit = parseFloat($(this).find('td:nth-child(6)').text().replace(/,/g, '')) || 0;
+                        //         additionalSumDebit += debit;
+                        //         additionalSumCredit += credit;
+                        //     });
+
+                        //     var closingBalance = parseFloat($('#closing-balance').text().replace(/,/g, '')) || 0;
+                        //     additionalSumCredit += closingBalance;
+
+                        //     $('#additional-sum-debit').text(additionalSumDebit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        //     $('#additional-sum-credit').text(additionalSumCredit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                        // }
 
                         function calculateAdditionalSum() {
                             var additionalSumDebit = 0.00;
@@ -273,12 +292,15 @@
                                 additionalSumCredit += credit;
                             });
 
-                            var closingBalance = parseFloat($('#closing-balance').text().replace(/,/g, '')) || 0;
-                            additionalSumCredit += closingBalance;
+                            var closingDebit = parseFloat($('#closing-debit').text().replace(/,/g, '')) || 0;
+                            var closingCredit = parseFloat($('#closing-credit').text().replace(/,/g, '')) || 0;
+
+                            additionalSumDebit += closingDebit;
+                            additionalSumCredit += closingCredit;
 
                             $('#additional-sum-debit').text(additionalSumDebit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                            $('#additional-sum-credit').text(additionalSumCredit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                        }
+                                $('#additional-sum-credit').text(additionalSumCredit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                            }
 
                         // Initial calculation
                         calculateClosingBalance();
@@ -292,9 +314,6 @@
                             window.location.href = url; // Redirect to the URL for downloading PDF
                         });
                     });
-
-
-
                 </script>
             @endpush
         </div>

@@ -50,11 +50,10 @@
                         <div class="col-md-4">
                             <div class="card mb-4 shadow text-center">
                                 <div class="card-header quick-link">
-                                    {{-- <a href="bills.php?date=<?php echo date("01-m-Y"); ?>"> --}}
-                                        <a href="{{ route('bills.index', ['date' => date("01-m-Y"), 'guid' => $societyGuid]) }}" style="color: #337ab7;">
-                                            <i class="fa fa-line-chart" aria-hidden="true"></i>
-                                            <p>Bills</p>
-                                        </a>
+                                    <a href="{{ route('bills.index', ['date' => date("01-m-Y"), 'guid' => $societyGuid]) }}" style="color: #337ab7;">
+                                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                        <p>Bills</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -62,10 +61,10 @@
                         <div class="col-md-4">
                             <div class="card mb-4 shadow text-center">
                                 <div class="card-header quick-link">
-                                    {{-- <a href="{{ route('members.index') }}?guid={{ $societyGuid }}" style="color: #337ab7;"> --}}
+                                    <a href="{{ route('memberOutstanding.index', ['from_date' => date("01-m-Y"),'to_date' => date("01-m-Y"), 'guid' => $societyGuid]) }}" style="color: #337ab7;">
                                         <i class="fa fa-inr"></i>
                                         <p>Outstanding</p>
-                                    {{-- </a> --}}
+                                    </a>
                                 </div>
                             </div>
                         </div>

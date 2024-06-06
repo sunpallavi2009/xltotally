@@ -58,6 +58,10 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/bills', [BillController::class, 'index'])->name('bills.index');
     Route::get('/bills/get-data', [BillController::class, 'getData'])->name('bills.get-data');
+
+    Route::get('/memberOutstanding', [MemberController::class, 'memberOutstandingIndex'])->name('memberOutstanding.index');
+    Route::get('/memberOutstanding/get-data', [MemberController::class, 'memberOutstandingGetData'])->name('memberOutstanding.get-data');
+
     // Route::get('/society/create', [SocietyController::class, 'create'])->name('society.create');
     // Route::post('/society/store', [SocietyController::class, 'store'])->name('society.store');
     // Route::delete('/society/{society}', [SocietyController::class, 'destroy'])->name('society.destroy');

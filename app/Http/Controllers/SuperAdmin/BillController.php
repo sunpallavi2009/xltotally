@@ -22,6 +22,7 @@ class BillController extends Controller
         if ($request->ajax()) {
             $societyGuid = $request->query('guid');
             $group = $request->query('group');
+            $billDate = $request->query('bill_date'); // Retrieve bill_date parameter
     
             $society = TallyCompany::where('guid', 'like', "$societyGuid%")->first();
     
@@ -29,22 +30,27 @@ class BillController extends Controller
                 return response()->json(['message' => 'Society not found'], 404);
             }
     
-            $query = TallyLedger::where('guid', 'like', $society->guid . '%');
+            $query = TallyLedger::where('guid', 'like', $society->guid . '%')
+                ->whereNotNull('alias1')
+                ->where('alias1', '!=', '');
     
-            // if ($group == 'Sundry Debtors') {
-            //     $query->where('primary_group', 'Sundry Debtors')
-            //           ->whereNotNull('alias1')
-            //           ->where('alias1', '!=', '');
-            // } else {
-            //     $query->where('primary_group', '!=', 'Sundry Debtors');
-            // }
+            // Filter data based on bill_date
+            if ($billDate) {
+                // Assuming voucher_date is the column in vouchers table to filter
+                $query->whereHas('vouchers', function ($q) use ($billDate) {
+                    $q->whereDate('voucher_date', '=', $billDate);
+                });
+            }
     
             $members = $query->withCount('vouchers')
                 ->with('vouchers')
                 ->latest()
                 ->get()
-                ->map(function($member) {
+                ->map(function ($member) {
+                    // Assuming first_voucher_date is a dynamic property/method
                     $member->first_voucher_date = $member->firstVoucherDate();
+                    $member->voucher_number = $member->vouchers->first()->voucher_number ?? '';
+                    $member->amount = $member->vouchers->first()->amount ?? '';
                     return $member;
                 });
     
@@ -53,4 +59,39 @@ class BillController extends Controller
                 ->make(true);
         }
     }
+    
+
+    // public function getData(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $societyGuid = $request->query('guid');
+    //         $group = $request->query('group');
+    
+    //         $society = TallyCompany::where('guid', 'like', "$societyGuid%")->first();
+    
+    //         if (!$society) {
+    //             return response()->json(['message' => 'Society not found'], 404);
+    //         }
+    
+    //         $query = TallyLedger::where('guid', 'like', $society->guid . '%')
+    //                                 ->whereNotNull('alias1')
+    //                                 ->where('alias1', '!=', '');
+
+    
+    //         $members = $query->withCount('vouchers')
+    //             ->with('vouchers')
+    //             ->latest()
+    //             ->get()
+    //             ->map(function($member) {
+    //                 $member->first_voucher_date = $member->firstVoucherDate();
+    //                 $member->voucher_number = $member->vouchers->first()->voucher_number ?? '';
+    //                 $member->amount = $member->vouchers->first()->amount ?? '';
+    //                 return $member;
+    //             });
+    
+    //         return DataTables::of($members)
+    //             ->addIndexColumn()
+    //             ->make(true);
+    //     }
+    // }
 }
